@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template/template.xhtml">
+    <ui:define name="content">
+        <h:form id="form">
+            <p:messages id="messages" showDetail="true" closable="true"/>
+
+            <p:panel header="Nova Tarefa">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputLabel for="title" value="Título:"/>
+                        <p:inputText id="title" value="#{taskBean.task.title}" required="true"
+                                     style="width: 100%"/>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputLabel for="responsible" value="Responsável:"/>
+                        <p:inputText id="responsible" value="#{taskBean.task.responsible}"
+                                     required="true" style="width: 100%"/>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputLabel for="priority" value="Prioridade:"/>
+                        <p:selectOneMenu id="priority" value="#{taskBean.task.priority}"
+                                         required="true" style="width: 100%">
+                            <f:selectItem itemLabel="Selecione..." itemValue=""/>
+                            <f:selectItems value="#{taskBean.priorities}"
+                                           var="priority"
+                                           itemLabel="#{priority.name()}"
+                                           itemValue="#{priority}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <p:outputLabel for="deadline" value="Data Limite:"/>
+                        <p:datePicker id="deadline" value="#{taskBean.task.deadline}"
+                                      pattern="dd/MM/yyyy" showIcon="true" style="width: 100%"/>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel for="description" value="Descrição:"/>
+                        <p:inputTextarea id="description" value="#{taskBean.task.description}"
+                                         rows="3" style="width: 100%"/>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:commandButton value="Salvar" action="#{taskBean.save}"
+                                         update="form" icon="pi pi-save"/>
+                        <p:commandButton value="Limpar" type="reset"
+                                         icon="pi pi-times" style="margin-left: 5px"/>
+                    </div>
+                </div>
+            </p:panel>
+
+            <p:panel header="Filtros" style="margin-top: 20px">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4">
+                        <p:outputLabel for="searchTitle" value="Título:"/>
+                        <p:inputText id="searchTitle" value="#{taskBean.searchTitle}"
+                                     style="width: 100%"/>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-4">
+                        <p:outputLabel for="searchResponsible" value="Responsável:"/>
+                        <p:inputText id="searchResponsible" value="#{taskBean.searchResponsible}"
+                                     style="width: 100%"/>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-4">
+                        <p:outputLabel for="searchPriority" value="Prioridade:"/>
+                        <p:selectOneMenu id="searchPriority" value="#{taskBean.searchPriority}"
+                                         style="width: 100%">
+                            <f:selectItem itemLabel="Todas" itemValue=""/>
+                            <f:selectItems value="#{taskBean.priorities}"
+                                           var="priority"
+                                           itemLabel="#{priority.name()}"
+                                           itemValue="#{priority}"/>
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:commandButton value="Pesquisar" action="#{taskBean.search}"
+                                         update="tasksTable" icon="pi pi-search"/>
+                        <p:commandButton value="Limpar" action="#{taskBean.clear}"
+                                         update="tasksTable" icon="pi pi-times"
+                                         style="margin-left: 5px"/>
+                    </div>
+                </div>
+            </p:panel>
+
+            <p:dataTable id="tasksTable" value="#{taskBean.tasks}" var="task"
+                         style="margin-top: 20px" emptyMessage="Nenhuma tarefa encontrada"
+                         rowStyleClass="#{task.priority == 'HIGH' ? 'priority-high' :
+                                       task.priority == 'MEDIUM' ? 'priority-medium' :
+                                       'priority-low'}">
+
+                <p:column headerText="Título">
+                    <h:outputText value="#{task.title}"/>
+                </p:column>
+
+                <p:column headerText="Responsável">
+                    <h:outputText value="#{task.responsible}"/>
+                </p:column>
+
+                <p:column headerText="Prioridade">
+                    <h:outputText value="#{task.priority}"/>
+                </p:column>
+
+                <p:column headerText="Data Limite">
+                    <h:outputText value="#{task.deadline}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column style="width:100px;text-align: center">
+                    <p:commandButton icon="pi pi-pencil" title="Editar"
+                                     action="#{taskBean.edit(task)}"
+                                     update="form"
+                                     style="margin-right:5px"/>
+                    <p:commandButton icon="pi pi-trash" title="Excluir"
+                                     action="#{taskBean.delete(task)}"
+                                     update="form"
+                                     onclick="return confirm('Confirma a exclusão?')"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
