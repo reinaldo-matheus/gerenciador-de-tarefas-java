@@ -68,10 +68,4 @@ src/
     └── WEB-INF/
 ```
 
-## Próximos Passos
-
-- Implementação de interface web
-- Adição de novas funcionalidades (data de vencimento, prioridade, etc.)
-- Implementação de autenticação de usuários
-- Melhorias na camada de apresentação
 
